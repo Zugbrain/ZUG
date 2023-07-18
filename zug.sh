@@ -10,6 +10,13 @@ orig=input/WoWCombatLog.txt
 
 
 #    ┏━━━━━━━━━━━━━━━┓
+#    |    GLOBALS    |
+#    ┗━━━━━━━━━━━━━━━┛
+
+sep="────────────  ⚔  ────────────"
+
+
+#    ┏━━━━━━━━━━━━━━━┓
 #    |    HUNTERS    |
 #    ┗━━━━━━━━━━━━━━━┛
 
@@ -69,7 +76,7 @@ while read line; do
 
     # separator
     # echo "<< 🪓 >>"
-    echo "────────────  ⚔  ────────────"
+    echo $sep
 
     # cleanup all pet miss/dodge/parry?
     # there's no way to affect pets' hit tables other than positioning, so this is mostly unimportant.
@@ -88,24 +95,27 @@ warriors=`grep "'s Heroic Strike" $log | awk '{ print $3 }' | sort | uniq`
 # find all sunders
 for war in $warriors; do
 sunders=`grep "$war 's Sunder Armor" $log | wc -l`
-echo -e "WARRIORS: $war:\t$sunders sunders parried/dodged/missed" >> /tmp/zug/sunders
+echo -e "$war: $sunders" >> /tmp/zug/sunders
 done
 
 # print sunders sorted by #
-sort -k3 -n /tmp/zug/sunders > output/accountability.txt
-cat output/accountability.txt
-echo "────────────  ⚔  ────────────"
+sort -k2 -n /tmp/zug/sunders > output/accountability.txt
+echo "WARRIORS: Number of Sunder Armor parries/dodges/misses"
+cat output/accountability.txt | column -t
+echo $sep
 
 
 #    ┏━━━━━━━━━━━━━━━┓
 #    |    OUTPUT     |
 #    ┗━━━━━━━━━━━━━━━┛
+
 zip output/WoWCombatLog.zip $log 
 
 
 #    ┏━━━━━━━━━━━━━━━┓
 #    |    CLEANUP    |
 #    ┗━━━━━━━━━━━━━━━┛
+
 rm -f output/WoWCombatLog.txt.bak
 rm -f output/sed*
 rm -rf /tmp/zug/*
