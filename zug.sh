@@ -13,6 +13,10 @@ orig=input/WoWCombatLog.txt
 #    |    GLOBALS    |
 #    ┗━━━━━━━━━━━━━━━┛
 
+rm -f output/accountability.txt
+touch output/accountability.txt
+narc=output/accountability.txt
+
 sep="────────────  ⚔  ────────────"
 
 
@@ -92,16 +96,21 @@ done < /tmp/zug/hunter-pets
 # find all warriors
 warriors=`grep "'s Heroic Strike" $log | awk '{ print $3 }' | sort | uniq`
 
+# begin warrior section in output/accountability.txt
+echo "WARRIORS: Number of Sunder Armor parries/dodges/misses" >> $narc
+
 # find all sunders
 for war in $warriors; do
-sunders=`grep "$war 's Sunder Armor" $log | wc -l`
-echo -e "$war: $sunders" >> /tmp/zug/sunders
+
+    sunders=`grep "$war 's Sunder Armor" $log | wc -l`
+    echo -e "$war: $sunders" >> /tmp/zug/sunders
+    echo -e "$war: $sunders" >> $narc
+
 done
 
 # print sunders sorted by #
-sort -k2 -n /tmp/zug/sunders > output/accountability.txt
 echo "WARRIORS: Number of Sunder Armor parries/dodges/misses"
-cat output/accountability.txt | column -t
+cat /tmp/zug/sunders | sort -k2 -n | column -t
 echo $sep
 
 
