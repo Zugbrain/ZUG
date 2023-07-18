@@ -9,73 +9,73 @@ log=output/WoWCombatLog.txt
 orig=input/WoWCombatLog.txt
 
 
-# #    ┏━━━━━━━━━━━━━━━┓
-# #    |    HUNTERS    |
-# #    ┗━━━━━━━━━━━━━━━┛
+#    ┏━━━━━━━━━━━━━━━┓
+#    |    HUNTERS    |
+#    ┗━━━━━━━━━━━━━━━┛
 
-# # PET DAMAGE ATTRIBUTION
+# PET DAMAGE ATTRIBUTION
 
-# # get hunter + pet pairs
-# # TODO detect duplicates - all pet family names?
-# grep 'Happiness from' $log | awk 'BEGIN{OFS=" "} { print $8,$3 }' | sort | uniq > /tmp/zug/hunter-pets
-
-
-# # get pet ability names
-# while read line; do
-
-#     pet=`echo $line | awk '{ print $2 }'`
-
-#     # https://stackoverflow.com/a/21077908
-#     grep -E "$pet 's .* hits" $log | sed -e "s/.*$pet 's \(.*\) hits.*/\1/" |\
-#     sort | uniq > /tmp/zug/pet-abilities-${pet}
-
-# done < /tmp/zug/hunter-pets
+# get hunter + pet pairs
+# TODO detect duplicates - all pet family names?
+grep 'Happiness from' $log | awk 'BEGIN{OFS=" "} { print $8,$3 }' | sort | uniq > /tmp/zug/hunter-pets
 
 
-# # find/replace "pet hits" -> "hunter 's pet hits"
-# while read line; do
+# get pet ability names
+while read line; do
 
-#     hunter=`echo $line | awk '{ print $1 }'`
-#     pet=`echo $line | awk '{ print $2 }'`
-#     h='HUNTERS:'
+    pet=`echo $line | awk '{ print $2 }'`
 
-#     # handle illegal pet names? e.g. abilities
-#     # even the logging addon says this is a no-no, so I'm not going out of my way to cover it. Trolls gonna troll
+    # https://stackoverflow.com/a/21077908
+    grep -E "$pet 's .* hits" $log | sed -e "s/.*$pet 's \(.*\) hits.*/\1/" |\
+    sort | uniq > /tmp/zug/pet-abilities-${pet}
 
-#     # hits
-#     hmsg=`echo "replacing#'$pet hits'#with#'$hunter hits'" | column -t -s '#' -o $'\t'`
-#     echo "$h $hunter: $hmsg"
-#     sed -i'.bak' "s/${pet} hits/${hunter} hits/g" $log
+done < /tmp/zug/hunter-pets
 
-#     # crits
-#     cmsg=`echo "replacing#'$pet crits'#with#'$hunter crits'" | column -t -s '#' -o $'\t'`
-#     echo "$h $hunter: $cmsg"
-#     sed -i'.bak' "s/${pet} crits/${hunter} crits/g" $log
 
-#     # pet abilities
-#     while read ability; do
+# find/replace "pet hits" -> "hunter 's pet hits"
+while read line; do
+
+    hunter=`echo $line | awk '{ print $1 }'`
+    pet=`echo $line | awk '{ print $2 }'`
+    h='HUNTERS:'
+
+    # handle illegal pet names? e.g. abilities
+    # even the logging addon says this is a no-no, so I'm not going out of my way to cover it. Trolls gonna troll
+
+    # hits
+    hmsg=`echo "replacing#'$pet hits'#with#'$hunter hits'" | column -t -s '#' -o $'\t'`
+    echo "$h $hunter: $hmsg"
+    sed -i'.bak' "s/${pet} hits/${hunter} hits/g" $log
+
+    # crits
+    cmsg=`echo "replacing#'$pet crits'#with#'$hunter crits'" | column -t -s '#' -o $'\t'`
+    echo "$h $hunter: $cmsg"
+    sed -i'.bak' "s/${pet} crits/${hunter} crits/g" $log
+
+    # pet abilities
+    while read ability; do
                
-#         # hits
-#         ahmsg=`echo "replacing#'$pet 's $ability hits'#with#'$hunter 's $ability hits'" | column -t -s '#' -o $'\t'`
-#         echo -e "$h $hunter: $ahmsg"
-#         sed -i'.bak' "s/${pet} 's $ability hits/${hunter} 's $ability hits/g" $log
+        # hits
+        ahmsg=`echo "replacing#'$pet 's $ability hits'#with#'$hunter 's $ability hits'" | column -t -s '#' -o $'\t'`
+        echo -e "$h $hunter: $ahmsg"
+        sed -i'.bak' "s/${pet} 's $ability hits/${hunter} 's $ability hits/g" $log
 
-#         # crits 
-#         acmsg=`echo "replacing#'$pet 's $ability crits'#with#'$hunter 's $ability crits'" | column -t -s '#' -o $'\t'`
-#         echo -e "$h $hunter: $acmsg"
-#         sed -i'.bak' "s/${pet} 's $ability crits/${hunter} 's $ability crits/g" $log
+        # crits 
+        acmsg=`echo "replacing#'$pet 's $ability crits'#with#'$hunter 's $ability crits'" | column -t -s '#' -o $'\t'`
+        echo -e "$h $hunter: $acmsg"
+        sed -i'.bak' "s/${pet} 's $ability crits/${hunter} 's $ability crits/g" $log
 
-#     done < /tmp/zug/pet-abilities-${pet}
+    done < /tmp/zug/pet-abilities-${pet}
 
-#     # separator
-#     # echo "<< 🪓 >>"
-#     echo "────────────  ⚔  ────────────"
+    # separator
+    # echo "<< 🪓 >>"
+    echo "────────────  ⚔  ────────────"
 
-#     # cleanup all pet miss/dodge/parry?
-#     # there's no way to affect pets' hit tables other than positioning, so this is mostly unimportant.
-#     # maybe tracking all parries and displaying them could be helpful...
+    # cleanup all pet miss/dodge/parry?
+    # there's no way to affect pets' hit tables other than positioning, so this is mostly unimportant.
+    # maybe tracking all parries and displaying them could be helpful...
 
-# done < /tmp/zug/hunter-pets
+done < /tmp/zug/hunter-pets
 
 
 #    ┏━━━━━━━━━━━━━━━┓
