@@ -1,12 +1,14 @@
 # ZUG
 
-This script parses and modifies [Legacy Players](http://legacyplayers.info/) log files (server: Turtle WoW (1.16.1)). Its goal is twofold: to fix inconsistencies and omissions in the parsing process, and to report key data to more accurately assess players' performance.
+This script parses and modifies [Legacy Players](http://legacyplayers.info/) log files (server: Turtle WoW (1.16.1)). Its goal is twofold: to fix inconsistencies and omissions in the Legacy Players parsing process, and to report key data to more accurately assess players' performance.
 
 This is my first shell script. I don't have tons of time to work on this. Temper your expectations.
 
 ## INSTRUCTIONS
+You will need a Linux environment. 
+
 1. Move your log file (must be named `WoWCombatLog.txt`) into the `input` directory.
-1. In the project directory (`ZUG`), run:
+1. In the main directory (`ZUG`), run:
 ```sh
 ./zug.sh
 ```
