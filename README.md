@@ -5,7 +5,7 @@ This script parses and modifies [Legacy Players](http://legacyplayers.info/) log
 This is my first shell script. I don't have tons of time to work on this. Temper your expectations.
 
 ## INSTRUCTIONS
-You will need a Linux environment. 
+You will need a Linux environment and shell. (Windows users: check out WSL2 or Docker + VSCode dev containers.) 
 
 1. Move your log file (must be named `WoWCombatLog.txt`) into the `input` directory.
 1. In the main directory (`ZUG`), run:
